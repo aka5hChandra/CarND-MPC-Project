@@ -101,23 +101,13 @@ class FG_eval {
     AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * CppAD::pow(x0, 2) + coeffs[3] * CppAD::pow(x0, 3);
     AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0 + 3 * coeffs[3] * CppAD::pow(x0, 2));
 
-    // Here's `x` to get you started.
-    // The idea here is to constraint this value to be 0.
-    //
-    // Recall the equations for the model:
-    // x_[t] = x[t-1] + v[t-1] * cos(psi[t-1]) * dt
-    // y_[t] = y[t-1] + v[t-1] * sin(psi[t-1]) * dt
-    // psi_[t] = psi[t-1] + v[t-1] / Lf * delta[t-1] * dt
-    // v_[t] = v[t-1] + a[t-1] * dt
-    // cte[t] = f(x[t-1]) - y[t-1] + v[t-1] * sin(epsi[t-1]) * dt
-    // epsi[t] = psi[t] - psides[t-1] + v[t-1] * delta[t-1] / Lf * dt
  
     fg[1 + x_start + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
     fg[1 + y_start + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
-    fg[1 + psi_start + t] = psi1 - (psi0 - v0 / Lf * delta0 * dt);
+    fg[1 + psi_start + t] = psi1 - (psi0 - (v0 / Lf) * delta0 * dt);
     fg[1 + v_start + t] = v1 - (v0 + a0 * dt);
     fg[1 + cte_start + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
-    fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) - v0 / Lf * delta0 * dt);
+    fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) + (v0 / Lf) * delta0 * dt);
      
    }
   }

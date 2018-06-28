@@ -2,6 +2,18 @@
 Self-Driving Car Engineer Nanodegree Program
 
 ---
+## The Model
+The vehicle model is a global kinematic model whose state inloves vehicle's position x and y, its orintaion psi and velocity v. Along with these, the model also includes the cross track error CTE (which express the error between the center of the road and the vehicle's position) and an orientation error(cpsi). The actuator output includes acceleration and steering angle (delta). The vehicle state at each step is updated from previous step, the updated equation are defined from line 105 to line 110 in MPC.cpp.
+
+## Timestep Length and Elapsed Duration (N & dt)
+N is the number of timesteps in the horizon, dt is how much time elapses between actuations. After few trails, the value of N is set for 10 and dt for 0.1, which sets the value of T for 1 second.
+
+## Polynomial Fitting and MPC Preprocessing
+The waypoints are preprocessed by transforming them to the vehicle's co-ordinate system, in which the vehicle is at origin.
+
+## Model Predictive Control with Latency
+The latency is achived by computing the state of the vehicle model from the previous step witg the delay of 1 second.
+
 
 ## Dependencies
 

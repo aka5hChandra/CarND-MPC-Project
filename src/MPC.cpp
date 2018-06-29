@@ -123,6 +123,7 @@ MPC::~MPC() {}
 vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   bool ok = true;
   size_t i;
+	
   typedef CPPAD_TESTVECTOR(double) Dvector;
 
   // TODO: Set the number of model variables (includes both states and inputs).
@@ -177,7 +178,10 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
     vars_upperbound[i] = 1.0;
   }
 
-
+  vars_lowerbound[delta_start]=prevDelta;
+  vars_upperbound[delta_start]=prevDelta;
+  vars_lowerbound[a_start]=prevA;
+  vars_upperbound[a_start]=prevA;
 
   // Lower and upper limits for the constraints
   // Should be 0 besides initial state.
@@ -246,8 +250,13 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   // creates a 2 element double vector.
   vector<double> result;
 
-  result.push_back(solution.x[delta_start]);
-  result.push_back(solution.x[a_start]);
+  //result.push_back(solution.x[delta_start]);
+  //result.push_back(solution.x[a_start]);
+  
+  result.push_back(solution.x[delta_start+1]);
+  result.push_back(solution.x[a_start+1]);
+  prevDelta=solution.x[delta_start+1];
+  prevA=solution.x[a_start+1];
 
   for (int i = 0; i < N-1; i++) {
     result.push_back(solution.x[x_start + i + 1]);
